@@ -1,9 +1,8 @@
 {
   "version": 2,
-  "builds": [
-    { "src": "api.js", "use": "@vercel/node" }
-  ],
-  "routes": [
-    { "src": "/(.*)", "dest": "/api.js" }
-  ]
+  "build": {
+    "env": {
+      "SKIP_INSTALL": "canvas"
+    }
+  }
 }
