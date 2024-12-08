@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>[+] I'm Fz - API's | Dashboard [+]</title>
+    <meta property="og:title" content="[+] I'm Fz - API's | Dashboard [+] ">  
+    <meta name="description" content="API - rest para bots de WhatsApp">
+    <meta property="og:image" content="https://github.com/FzTeis.png">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Eliasar54/Css@main/style.css">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body oncontextmenu="return false">
+  <div class="navbar">
+    <div class="url" onclick="window.location.href='https://wa.me/82340051'">StarCore | API</div>
+    <div class="icons">
+      <div class="notification">
+        <i class="fas fa-bell"></i>
+        <div class="notification-badge">+1</div>
+        <div class="notification-popup">API Gratuita, pero puedes donar si quieres 🤗</div>
+      </div>
+      <div class="menu">
+        <i class="fas fa-bars"></i>
+        <div class="menu-content">
+          <input type="text" placeholder="Buscar..." oninput="filterMenu(this)">
+          <a href="/api/facebook?url=https://fb.watch/ujmoNe9vfM/?mibextid=rS40aB7S9Ucbxw6v&apikey=default">Facebook</a>
+          <a href="/api/openai?q=Hola&user=Tesis&apikey=default">Chat GPT</a>
+          <a href="/api/animes?q=Black%20Clover&apikey=default">Anime Search</a>
+          <a href="/api/animedl?url=https://tioanime.com/anime/ore-dake-haireru-kakushi-dungeon&apikey=default">Anime Download</a>
+          <a href="/moderador">Moderator</a>
+          <a href="/planos">Planes</a>
+          <a href="/">inicio</a>
+        </div>
+      </div>
+      <i class="fas fa-adjust" onclick="toggleTheme()"></i>
+    </div>
+  </div>
+  <div class="dashboard">
+    <h1>Dashboard</h1>
+    <div class="alert">
+      <i class="fas fa-tools"></i>
+      StarCore | API contamos con apis funcionales al 100% 🕊️
+    </div>
+    <div class="cards">
+      <div class="card usage">
+        <div>
+          <div class="title">Solicitudes por usuario</div>
+          <div>75 <span>/minuto</span></div>
+        </div>
+        <div class="icon"><i class="fas fa-chart-line"></i></div>
+      </div>
+      <div class="card ip">
+        <div>
+          <div class="title">Tu IP</div>
+          <div id="user-ip">Cargando...</div>
+        </div>
+        <div class="icon"><i class="fas fa-network-wired"></i></div>
+      </div>
+      <div class="card battery">
+        <div>
+          <div class="title">Batería</div>
+          <div id="battery-status">Cargando...</div>
+        </div>
+        <div class="icon"><i class="fas fa-battery-half"></i></div>
+      </div>
+      <div class="card total-requests">
+        <div>
+          <div class="title">Total de Solicitudes a esta web</div>
+          <div id="total-requests">0</div>
+        </div>
+        <div class="icon"><i class="fas fa-database"></i></div>
+      </div>
+      <div class="alert">
+        <img src="https://github.com/FzTeis.png" alt="Logo EliasarYT" style="width: 40px; height: 40px; margin-right: 10px; border-radius: 50%;">
+        <span>
+          Api en desarrollo pijes, sigueme en mi canal de <a href="https://whatsapp.com/channel/0029Va6InNBFCCoM9xzKFG3G" target="_blank" style="color: #4e9ce0; text-decoration: underline;">WhatsApp</a> 📱  
+          o dona a nuestro <a href="https://www.paypal.me/T3sis" target="_blank" style="color: #4e9ce0; text-decoration: underline;">Paypal</a>. 💖🙌  
+        </span>
+      </div>
+    </div>
+    <canvas id="apiUsageChart"></canvas>
+  </div>
+  <footer class="footer">
+    © Eliasar YT ッ
+  </footer>
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/gh/Eliasar54/Css@main/script.js"></script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'8eee935e3cf5d35e',t:'MTczMzY3OTk5NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
