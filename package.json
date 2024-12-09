@@ -151,7 +151,7 @@
     "@jimp/plugin-circle": "^x",
     "@jimp/plugin-resize": "^x",
     "@jimp/plugin-color": "^x",
-    "canvafy": "^x",
+    "canvafy": "latest",
     "tinyurl": "^1.1.7",
       "ruhend-scraper": "latest",
     "bitly": "^7.1.2",
