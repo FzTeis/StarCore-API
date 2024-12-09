@@ -5,7 +5,8 @@
   "main": "api.js",
   "scripts": {
     "start": "sh iniciar.sh",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "install": "if [ \"$SKIP_INSTALL\" != \"canvas\" ]; then npm install canvas; fi"
   },
   "repository": {
     "type": "git",
