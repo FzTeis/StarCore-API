@@ -1,14 +1,14 @@
 {
   "version": 2,
   "builds": [
-  "env": {
-      "SKIP_INSTALL": "canvas"
-    },
     {
       "src": "api.js",
       "use": "@vercel/node"
     }
   ],
+  "env": {
+    "SKIP_INSTALL": "canvas"
+  },
   "routes": [
     {
       "src": "/(.*)",
