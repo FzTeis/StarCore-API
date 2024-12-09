@@ -1,7 +1,7 @@
 {
-  "name": "SabAPIS",
+  "name": "StarCore-API",
   "version": "1.0.0",
-  "description": "Sab-Apis por Victor Gabriel. Inicialmente o projeto de design e arquitetura da api foi desenvolvido por Josival e seus amigos. Por mim, foi adicionado +300 apis novas! Obrigado..",
+  "description": "StarCore APIs by i'm Fz..",
   "main": "api.js",
   "scripts": {
     "start": "sh iniciar.sh",
@@ -17,7 +17,7 @@
     "rest",
     "api"
   ],
-  "author": "SabAPIS",
+  "author": "FzTeis",
   "license": "ISC",
   "bugs": {
     "url": "SEM_URL_GATINHA"
