@@ -213,7 +213,7 @@ app.get('/api/facebook', async (req, res, next) => {
     }
     RG_US(apikey, req);
     try {
-        const { fb } = require('./scrapers/facebook.js');
+        const fb = require('./scrapers/facebook.js');
         const result = await fb.dl(url);
         if (result.status) {
             return result
