@@ -213,15 +213,10 @@ app.get('/api/facebook', async (req, res, next) => {
     }
     RG_US(apikey, req);
     try {
-        const { downloadFacebookVideo } = require('./scrapers/facebook.js');
-        const result = await downloadFacebookVideo(url);
+        const { fb } = require('./scrapers/facebook.js');
+        const result = await fb.dl(url);
         if (result.status) {
-            return res.json({
-                status: true,
-                codigo: 200,
-                creator: "I'm Fz `",
-                resultado: await acc(result.url)
-            });
+            return result
         } else {
             return res.json({
                 status: false,
