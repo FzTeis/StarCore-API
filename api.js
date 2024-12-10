@@ -40,7 +40,7 @@ app.get("/", (req, res, next) => {
     res.end("Boop");
 });
 
-app.get('/api/keyerrada', (req, res) => {
+app.get('/api/apikey-check', (req, res) => {
     const apikey = req.query.apikey;
     const index = key.map(i => i?.apikey)?.indexOf(apikey);
     if (index < 0) {
