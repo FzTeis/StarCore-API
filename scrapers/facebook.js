@@ -14,7 +14,7 @@ const fb = {
         try {
             const response = await axios.get(fetchUrl, { headers });
             const html = response.data;
-            const data = await fsaver.getData(html);
+            const data = await fb.getData(html);
             return data;
         } catch (error) {
             return { success: false, message: error.message };
