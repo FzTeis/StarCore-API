@@ -90,7 +90,7 @@ app.get('/docs', (req, res) => {
     res.sendFile(path.join(__dirname, "./public/", "docs.html"));
 });
 
-app.get('/planos', (req, res) => {
+app.get('/publicidad', (req, res) => {
     res.sendFile(path.join(__dirname, "./public/", "planos.html"));
 });
 /**** APIS DE DESCARGA ******/
