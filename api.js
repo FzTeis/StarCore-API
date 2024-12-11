@@ -95,7 +95,7 @@ app.post('/api/add-ad', (req, res) => {
     return res.status(201).json({ message: "Anuncio agregado exitosamente." });
 });
 
-l
+
 app.get('/api/get-ads', (req, res) => {
     return res.json(ads); 
 });
