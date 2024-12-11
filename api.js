@@ -8,7 +8,7 @@ const acc = require('./scrapers/acortador.js');
 
 var key = JSON.parse(fs.readFileSync("./database/apikeys.json"));
 const usus_r = JSON.parse(fs.readFileSync("./database/usuarios.json"));
-const ads = JSON.parse(fs.readFileSync("./database/ads.json")); 
+const ads = JSON.parse(fs.readFileSync("./database/ads.json"));
 
 async function RG_US(apikey, req) {
     var i4 = key.map(i => i?.apikey)?.indexOf(apikey);
@@ -30,9 +30,7 @@ async function RG_US(apikey, req) {
 const app = express();
 app.use(cors());
 app.use(express.static("public"));
-app.use(express.json()); 
-
-// Rutas principales
+app.use(express.json());
 
 app.get("/", (req, res, next) => {
     console.log("Beep");
@@ -95,22 +93,37 @@ app.get('/api/del-key', (req, res) => {
 });
 
 app.post('/api/add-ad', (req, res) => {
-    const { title, url, imageUrl, description } = req.body;
-    if (!title || !url || !imageUrl || !description) {
+    const { title, url, image, description } = req.body;
+    if (!title || !url || !image || !description) {
         return res.status(400).json({ message: "Faltan campos requeridos." });
     }
 
-    const newAd = { title, url, imageUrl, description };
+    const newAd = { title, url, image, description };
     ads.push(newAd);
     fs.writeFileSync("./database/ads.json", JSON.stringify(ads, null, 2)); 
     return res.status(201).json({ message: "Anuncio agregado exitosamente." });
 });
 
+app.delete('/api/delete-ad', (req, res) => {
+    const { title } = req.body;
+    if (!title) {
+        return res.status(400).json({ message: "Faltan campos requeridos." });
+    }
+
+    let adIndex = ads.findIndex(ad => ad.title === title);
+    if (adIndex === -1) {
+        return res.status(404).json({ message: "Anuncio no encontrado." });
+    }
+
+    ads.splice(adIndex, 1);
+    fs.writeFileSync("./database/ads.json", JSON.stringify(ads, null, 2));
+    return res.status(200).json({ message: "Anuncio eliminado exitosamente." });
+});
 
 app.get('/api/get-ads', (req, res) => {
     return res.json(ads); 
 });
-/**** APIS DE DESCARGA ******/
+
 app.get('/api/animedl', async (req, res, next) => {
     const apikey = req.query.apikey;
     const url = req.query.url;
@@ -237,11 +250,8 @@ app.get('/api/facebook', async (req, res, next) => {
     }
 });
 
-
-/***""**************************/
 app.use(router);
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Servidor corriendo en puerto ${PORT}`);
 });
-
