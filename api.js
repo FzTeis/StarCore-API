@@ -4,14 +4,11 @@ const cors = require('cors');
 const path = require('path');
 const router = express.Router();
 const ddos = require('ddos'); // Asegúrate de instalar esta dependencia
-// acortador
 const acc = require('./scrapers/acortador.js');
 
-// Base de datos de claves y usuarios
 var key = JSON.parse(fs.readFileSync("./database/apikeys.json"));
 const usus_r = JSON.parse(fs.readFileSync("./database/usuarios.json"));
 
-// Función para registrar uso de la API
 async function RG_US(apikey, req) {
     var i4 = key.map(i => i?.apikey)?.indexOf(apikey);
     if (i4 >= 0) {
@@ -35,6 +32,7 @@ app.use(express.static("public"));
 //router.use(ddos.express);
 
 // Rutas principales
+
 app.get("/", (req, res, next) => {
     console.log("Beep");
     res.end("Boop");
@@ -213,8 +211,8 @@ app.get('/api/facebook', async (req, res, next) => {
     }
     RG_US(apikey, req);
     try {
-        const fb = require('./scrapers/facebook.js');
-        const result = await fb.dl(url);
+        const { fbdl } = require('./scrapers/facebook.js');
+        const result = await fbdl(url);
         if (result.status) {
             return result
         } else {
