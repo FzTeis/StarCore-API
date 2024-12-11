@@ -3,12 +3,12 @@ const fs = require('fs');
 const cors = require('cors');
 const path = require('path');
 const router = express.Router();
-const ddos = require('ddos'); // Asegúrate de instalar esta dependencia
+const ddos = require('ddos');
 const acc = require('./scrapers/acortador.js');
 
 var key = JSON.parse(fs.readFileSync("./database/apikeys.json"));
 const usus_r = JSON.parse(fs.readFileSync("./database/usuarios.json"));
-const adsFile = path.join(__dirname, "./database/ads.json");
+const ads = JSON.parse(fs.readFileSync("./database/ads.json")); 
 
 async function RG_US(apikey, req) {
     var i4 = key.map(i => i?.apikey)?.indexOf(apikey);
@@ -30,7 +30,7 @@ async function RG_US(apikey, req) {
 const app = express();
 app.use(cors());
 app.use(express.static("public"));
-//router.use(ddos.express);
+app.use(express.json()); 
 
 // Rutas principales
 
@@ -79,69 +79,158 @@ app.get('/api/del-key', (req, res) => {
         var i2 = key.map(i => i.apikey).indexOf(apikey);
         key.splice(i2, 1);
         fs.writeFileSync("./database/apikeys.json", JSON.stringify(key));
-        return res.json({ message: `Apikey ${apikey} borrada con éxito.` });
+        return res.json({ message: "Apikey eliminada correctamente." });
     }
 });
 
-app.get('/moderador', (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/", "moderador.html"));
-});
-
-app.get('/docs', (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/", "docs.html"));
-});
-
-app.get('/publicidad', (req, res) => {
-    res.sendFile(path.join(__dirname, "./public/", "planos.html"));
-});
-
-/**** Rutas de publicaciones ****/
-
-// Ruta para obtener todas las publicaciones
-app.get('/api/publicaciones', (req, res) => {
-    fs.readFile(adsFile, "utf8", (err, data) => {
-        if (err) {
-            console.error("Error al leer el archivo de publicaciones:", err);
-            return res.status(500).json({ message: "Error interno del servidor" });
-        }
-        res.json(JSON.parse(data)); // Devuelve las publicaciones en formato JSON
-    });
-});
-
-// Ruta para agregar una nueva publicación
-app.post('/api/publicaciones', express.json(), (req, res) => {
-    const nuevaPublicacion = req.body;
-
-    // Validar los campos requeridos
-    if (!nuevaPublicacion.titulo || !nuevaPublicacion.link) {
-        return res.status(400).json({ message: "El título y el enlace son obligatorios" });
+app.post('/api/add-ad', (req, res) => {
+    const { title, url, imageUrl, description } = req.body;
+    if (!title || !url || !imageUrl || !description) {
+        return res.status(400).json({ message: "Faltan campos requeridos." });
     }
 
-    fs.readFile(adsFile, "utf8", (err, data) => {
-        if (err) {
-            console.error("Error al leer el archivo de publicaciones:", err);
-            return res.status(500).json({ message: "Error interno del servidor" });
-        }
-
-        const publicaciones = JSON.parse(data);
-        publicaciones.push(nuevaPublicacion); // Agrega la nueva publicación al array
-
-        fs.writeFile(adsFile, JSON.stringify(publicaciones, null, 2), (err) => {
-            if (err) {
-                console.error("Error al guardar la publicación:", err);
-                return res.status(500).json({ message: "Error interno del servidor" });
-            }
-            res.status(201).json({ message: "Publicación agregada con éxito" });
-        });
-    });
+    const newAd = { title, url, imageUrl, description };
+    ads.push(newAd);
+    fs.writeFileSync("./database/ads.json", JSON.stringify(ads, null, 2)); 
+    return res.status(201).json({ message: "Anuncio agregado exitosamente." });
 });
+
+l
+app.get('/api/get-ads', (req, res) => {
+    return res.json(ads); 
+});
+/**** APIS DE DESCARGA ******/
+app.get('/api/animedl', async (req, res, next) => {
+    const apikey = req.query.apikey;
+    const url = req.query.url;
+
+    if (!key.map(i => i.apikey)?.includes(apikey)) {
+        return res.sendFile(path.join(__dirname, "./public/", "apikey_invalida.html"));
+    }
+    if (key[key.map(i => i?.apikey)?.indexOf(apikey)]?.request <= 0) {
+        return res.json({ message: "Apikey no válida o solicitudes agotadas!" });
+    }
+    if (!url) {
+        return res.json({ status: false, message: "Coloque el parámetro: url" });
+    }
+    RG_US(apikey, req);    
+
+    try {
+        const { processAnime } = require('./scrapers/Tioanime.js'); 
+        const result = await processAnime(url);
+        return res.json(result);
+
+    } catch (e) {
+        console.error(e);
+        return res.json({ status: false, message: "Ocurrió un error" });
+    }
+});
+
+app.get('/api/animes', async (req, res, next) => {
+    const apikey = req.query.apikey;
+    const q = req.query.q;
+
+    if (!key.map(i => i.apikey)?.includes(apikey)) {
+        return res.sendFile(path.join(__dirname, "./public/", "apikey_invalida.html"));
+    }
+    if (key[key.map(i => i?.apikey)?.indexOf(apikey)]?.request <= 0) {
+        return res.json({ message: "Apikey no válida o solicitudes agotadas!" });
+    }
+    if (!q) {
+        return res.json({ status: false, message: "Coloque el parámetro: q" });
+    }
+    RG_US(apikey, req);    
+
+    try {
+        const { searchAnime } = require('./scrapers/Tioanime.js'); 
+        const result = await searchAnime(q);
+        return res.json(result);
+
+    } catch (e) {
+        console.error(e);
+        return res.json({ status: false, message: "Ocurrió un error" });
+    }
+});
+
+app.get('/api/openai', async (req, res, next) => {
+    const apikey = req.query.apikey;
+    const q = req.query.q;
+    const user = req.query.user
+    if (!key.map(i => i.apikey)?.includes(apikey)) {
+        return res.sendFile(path.join(__dirname, "./public/", "apikey_invalida.html"));
+    }
+    if (key[key.map(i => i?.apikey)?.indexOf(apikey)]?.request <= 0) {
+        return res.json({ message: "Apikey no válida o solicitudes agotadas!" });
+    }
+    if (!q) {
+        return res.json({ status: false, message: "Coloque el parámetro: q" });
+    }
+    RG_US(apikey, req);    
+
+    try {
+        const { gpt } = require('./scrapers/openai.js'); 
+        const result = await gpt(q, user);
+        return res.json(result);
+
+    } catch (e) {
+        console.error(e);
+        return res.json({ status: false, message: "Ocurrió un error" });
+    }
+});
+
+app.get('/api/tiktoks', async (req, res, next) => {
+    const apikey = req.query.apikey;
+    const q = req.query.q;
+    if (!key.map(i => i.apikey)?.includes(apikey)) {
+        return res.sendFile(path.join(__dirname, "./public/", "apikey_invalida.html"));
+    }
+    if (key[key.map(i => i?.apikey)?.indexOf(apikey)]?.request <= 0) {
+        return res.json({ message: "Apikey no válida o solicitudes agotadas!" });
+    }
+    if (!q) {
+        return res.json({ status: false, message: "Coloque el parámetro: q" });
+    }
+    RG_US(apikey, req);    
+
+    try {
+        const { ttks } = require('./scrapers/tiktoks.js'); 
+        const result = await ttks(q);
+        return res.json(result);
+
+    } catch (e) {
+        console.error(e);
+        return res.json({ status: false, message: "Ocurrió un error" });
+    }
+});
+
+app.get('/api/facebook', async (req, res, next) => {
+    const apikey = req.query.apikey;
+    const url = req.query.url;
+    if (!key.map(i => i.apikey)?.includes(apikey)) {
+        return res.sendFile(path.join(__dirname, "./public/", "apikey_invalida.html"));
+    }
+    if (key[key.map(i => i?.apikey)?.indexOf(apikey)]?.request <= 0) {
+        return res.json({ message: "Apikey no válida o solicitudes agotadas!" });
+    }
+    if (!url) {
+        return res.json({ status: false, message: "Coloque el parámetro: url" });
+    }
+    RG_US(apikey, req);
+    try {
+        const { fbdl } = require('./scrapers/facebook.js');
+        const result = await fbdl(url);
+            return result
+    } catch (err) {
+        console.error(err);
+        return res.json({ message: 'Error en el servidor interno' });
+    }
+});
+
 
 /***""**************************/
-// Usar el router
 app.use(router);
-
-// Servidor
-const PORT = process.env.PORT || 3075;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Servidor corriendo en el puerto ${PORT}`);
+    console.log(`Servidor corriendo en puerto ${PORT}`);
 });
+
