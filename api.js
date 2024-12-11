@@ -93,15 +93,28 @@ app.get('/api/del-key', (req, res) => {
 });
 
 app.post('/api/add-ad', (req, res) => {
-    const { title, url, image, description } = req.body;
-    if (!title || !url || !image || !description) {
-        return res.status(400).json({ message: "Faltan campos requeridos." });
+    const { title, url, image = "", video = "", description } = req.body;
+
+    if (!title || !url || !description) {
+        return res.status(400).json({ message: "Faltan campos requeridos: título, enlace o descripción." });
     }
 
-    const newAd = { title, url, image, description };
+    const newAd = {
+        title,
+        url,
+        description,
+        image: image || "",
+        video: video || ""
+    };
+
     ads.push(newAd);
-    fs.writeFileSync("./database/ads.json", JSON.stringify(ads, null, 2)); 
-    return res.status(201).json({ message: "Anuncio agregado exitosamente." });
+
+    try {
+        fs.writeFileSync("./database/ads.json", JSON.stringify(ads, null, 2));
+        return res.status(201).json({ message: "Anuncio agregado exitosamente." });
+    } catch (err) {
+        return res.status(500).json({ message: "Error interno al guardar el anuncio." });
+    }
 });
 
 app.delete('/api/delete-ad', (req, res) => {
