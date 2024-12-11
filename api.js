@@ -38,6 +38,17 @@ app.get("/", (req, res, next) => {
     console.log("Beep");
     res.end("Boop");
 });
+app.get('/moderador', (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/", "moderador.html"));
+});
+
+app.get('/docs', (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/", "docs.html"));
+});
+
+app.get('/publicidad', (req, res) => {
+    res.sendFile(path.join(__dirname, "./public/", "planos.html"));
+});
 
 app.get('/api/apikey-check', (req, res) => {
     const apikey = req.query.apikey;
