@@ -77,7 +77,7 @@
             font-size: 14px;
             color: #b0b0b0;
             margin-bottom: 15px;
-            white-space: pre-wrap; /* Respeta saltos de línea */
+            white-space: pre-wrap;
             word-wrap: break-word;
         }
 
@@ -167,126 +167,17 @@
     <div class="form-container" id="adForm">
         <input id="adTitle" type="text" placeholder="Título de la publicidad" required>
         <textarea id="adDescription" rows="3" placeholder="Descripción de la publicidad"></textarea>
-        <button type="button" onclick="generateDescription()">Generar descripción con IA</button>
-        <input id="adImage" type="text" placeholder="URL de imagen (opcional)">
-        <input id="adVideo" type="text" placeholder="URL de video (opcional)">
-        <input id="adLink" type="text" placeholder="Enlace de destino" required>
-        <input id="adApiKey" type="password" placeholder="API Key" required>
         <button type="button" onclick="addAd()">Publicar</button>
     </div>
 
     <script>
-        function toggleForm() {
+        const container = document.getElementById('publicidadContent');
+        const toggleForm =()=>{
+         function toggleForm() {
             const form = document.getElementById("adForm");
             const overlay = document.getElementById("overlay");
             const isVisible = form.style.display === "block";
             form.style.display = isVisible ? "none" : "block";
             overlay.style.display = isVisible ? "none" : "block";
         }
-
-        function addAd() {
-            const title = document.getElementById("adTitle").value.trim();
-            const description = document.getElementById("adDescription").value.trim();
-            const image = document.getElementById("adImage").value.trim();
-            const video = document.getElementById("adVideo").value.trim();
-            const link = document.getElementById("adLink").value.trim();
-            const apiKey = document.getElementById("adApiKey").value.trim();
-
-            if (apiKey !== "StarCore") {
-                alert("API Key incorrecta.");
-                return;
-            }
-
-            if (!title || !link) {
-                alert("Título y enlace son obligatorios.");
-                return;
-            }
-
-            const ad = { title, description, image, video, link };
-            renderAd(ad);
-
-            const storedAds = JSON.parse(localStorage.getItem("ads")) || [];
-            storedAds.push(ad);
-            localStorage.setItem("ads", JSON.stringify(storedAds));
-
-            document.getElementById("adForm").reset();
-            toggleForm();
-        }
-
-        function renderAd(ad) {
-            const container = document.getElementById("publicidadContent");
-            const adItem = document.createElement("div");
-            adItem.className = "ad-item";
-
-            const content = document.createElement("div");
-            content.className = "ad-content";
-
-            const title = document.createElement("div");
-            title.className = "ad-title";
-            title.textContent = ad.title;
-            content.appendChild(title);
-
-            if (ad.description) {
-                const description = document.createElement("div");
-                description.className = "ad-description";
-                description.innerHTML = ad.description; // Usamos innerHTML para respetar los estilos
-                content.appendChild(description);
-            }
-
-            if (ad.image) {
-                const img = document.createElement("img");
-                img.src = ad.image;
-                img.alt = "Ad Image";
-                img.style.width = "100%";
-                img.style.borderRadius = "10px 10px 0 0";
-                adItem.appendChild(img);
-
-                // Crear el ícono de eliminación en la esquina superior derecha
-                const deleteIcon = document.createElement("i");
-                deleteIcon.className = "fa fa-trash delete-icon";
-                deleteIcon.onclick = function () {
-                    deleteAd(adItem);
-                };
-                adItem.appendChild(deleteIcon);
-            }
-
-            if (ad.video) {
-                const video = document.createElement("video");
-                video.src = ad.video;
-                video.controls = true;
-                video.style.width = "100%";
-                video.style.borderRadius = "10px 10px 0 0";
-                adItem.appendChild(video);
-            }
-
-            const link = document.createElement("a");
-            link.href = ad.link;
-            link.target = "_blank";
-            link.className = "ad-link";
-            link.textContent = "Visitar";
-            content.appendChild(link);
-
-            adItem.appendChild(content);
-            container.appendChild(adItem);
-        }
-
-        function deleteAd(adItem) {
-            const apiKey = prompt("Introduce la API Key para eliminar la publicación:");
-
-            if (apiKey === "delete") {
-                adItem.remove();
-                let storedAds = JSON.parse(localStorage.getItem("ads")) || [];
-                storedAds = storedAds.filter(ad => ad.title !== adItem.querySelector(".ad-title").textContent);
-                localStorage.setItem("ads", JSON.stringify(storedAds));
-            } else {
-                alert("API Key incorrecta.");
-            }
-        }
-
-        window.onload = function () {
-            const storedAds = JSON.parse(localStorage.getItem("ads")) || [];
-            storedAds.forEach(ad => renderAd(ad));
-        };
-    </script>
-</body>
 </html>
