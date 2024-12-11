@@ -203,11 +203,27 @@
             }
 
             const ad = { title, description, image, video, link };
-            renderAd(ad);
 
-            const storedAds = JSON.parse(localStorage.getItem("ads")) || [];
-            storedAds.push(ad);
-            localStorage.setItem("ads", JSON.stringify(storedAds));
+            // Llamada a la API para agregar el anuncio
+            fetch('/api/add-ad', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(ad),
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.message === "Anuncio agregado exitosamente.") {
+                    renderAd(ad);
+                } else {
+                    alert("Error al guardar el anuncio.");
+                }
+            })
+            .catch(error => {
+                alert("Hubo un error al conectar con el servidor.");
+                console.error(error);
+            });
 
             document.getElementById("adForm").reset();
             toggleForm();
@@ -229,7 +245,7 @@
             if (ad.description) {
                 const description = document.createElement("div");
                 description.className = "ad-description";
-                description.innerHTML = ad.description; // Usamos innerHTML para respetar los estilos
+                description.innerHTML = ad.description;
                 content.appendChild(description);
             }
 
@@ -241,7 +257,6 @@
                 img.style.borderRadius = "10px 10px 0 0";
                 adItem.appendChild(img);
 
-                // Crear el ícono de eliminación en la esquina superior derecha
                 const deleteIcon = document.createElement("i");
                 deleteIcon.className = "fa fa-trash delete-icon";
                 deleteIcon.onclick = function () {
@@ -275,17 +290,22 @@
 
             if (apiKey === "delete") {
                 adItem.remove();
-                let storedAds = JSON.parse(localStorage.getItem("ads")) || [];
-                storedAds = storedAds.filter(ad => ad.title !== adItem.querySelector(".ad-title").textContent);
-                localStorage.setItem("ads", JSON.stringify(storedAds));
+                alert("Anuncio eliminado.");
             } else {
                 alert("API Key incorrecta.");
             }
         }
 
         window.onload = function () {
-            const storedAds = JSON.parse(localStorage.getItem("ads")) || [];
-            storedAds.forEach(ad => renderAd(ad));
+            // Cargar los anuncios desde la API
+            fetch('/api/get-ads')
+                .then(response => response.json())
+                .then(data => {
+                    data.forEach(ad => renderAd(ad));
+                })
+                .catch(error => {
+                    console.error("Error al cargar los anuncios:", error);
+                });
         };
     </script>
 </body>
