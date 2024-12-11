@@ -249,6 +249,7 @@
                 content.appendChild(description);
             }
 
+            // Mostrar la imagen solo si existe
             if (ad.image) {
                 const img = document.createElement("img");
                 img.src = ad.image;
@@ -256,15 +257,9 @@
                 img.style.width = "100%";
                 img.style.borderRadius = "10px 10px 0 0";
                 adItem.appendChild(img);
-
-                const deleteIcon = document.createElement("i");
-                deleteIcon.className = "fa fa-trash delete-icon";
-                deleteIcon.onclick = function () {
-                    deleteAd(adItem);
-                };
-                adItem.appendChild(deleteIcon);
             }
 
+            // Mostrar el video solo si existe
             if (ad.video) {
                 const video = document.createElement("video");
                 video.src = ad.video;
@@ -280,6 +275,14 @@
             link.className = "ad-link";
             link.textContent = "Visitar";
             content.appendChild(link);
+
+            // Agregar el ícono de eliminar siempre
+            const deleteIcon = document.createElement("i");
+            deleteIcon.className = "fa fa-trash delete-icon";
+            deleteIcon.onclick = function () {
+                deleteAd(adItem);
+            };
+            adItem.appendChild(deleteIcon);
 
             adItem.appendChild(content);
             container.appendChild(adItem);
