@@ -77,6 +77,8 @@
             font-size: 14px;
             color: #b0b0b0;
             margin-bottom: 15px;
+            white-space: pre-wrap; /* Respeta saltos de línea */
+            word-wrap: break-word;
         }
 
         .ad-link {
@@ -227,7 +229,7 @@
             if (ad.description) {
                 const description = document.createElement("div");
                 description.className = "ad-description";
-                description.textContent = ad.description;
+                description.innerHTML = ad.description; // Usamos innerHTML para respetar los estilos
                 content.appendChild(description);
             }
 
